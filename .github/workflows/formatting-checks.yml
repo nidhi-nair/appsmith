@@ -49,6 +49,9 @@ jobs:
     needs: [server-formatting, client-formatting]
     if: always()
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Return status for formatting checks
         run: |
