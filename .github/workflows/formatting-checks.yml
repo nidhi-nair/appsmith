@@ -5,16 +5,32 @@ on:
     branches: [release, master]
 
 jobs:
-  server-formatting:
-    name: server-formatting
-    uses: ./.github/workflows/server-spotless.yml
-    secrets: inherit
-    with:
-      pr: ${{ github.event.pull_request.number }}
+  formatting-check:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out merge commit with the base branch in case this workflow is invoked via pull request
+      - name: Checkout the merged commit from PR and base branch
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+    
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            server:
+              - 'app/server/**'
+            client:
+              - 'app/client/**'
 
-  client-formatting:
-    name: client-formatting
-    uses: ./.github/workflows/client-prettier.yml
-    secrets: inherit
-    with:
-      pr: ${{ github.event.pull_request.number }}
+      - name: server-formatting
+        if: ${{ steps.filter.outputs.server == 'true' }}
+        uses: ./.github/workflows/server-spotless.yml
+        with:
+          pr: ${{ github.event.pull_request.number }}
+
+      - name: client-formatting
+        if: ${{ steps.filter.outputs.client == 'true' }}
+        uses: ./.github/workflows/client-prettier.yml
+        with:
+          pr: ${{ github.event.pull_request.number }}
