@@ -17,7 +17,6 @@ defaults:
 jobs:
   spotless-check:
     runs-on: ubuntu-latest
-
     steps:
       # Check out merge commit with the base branch in case this workflow is invoked via pull request
       - name: Checkout the merged commit from PR and base branch

@@ -5,8 +5,11 @@ on:
     branches: [release, master]
 
 jobs:
-  formatting-check:
+  path-filter:
     runs-on: ubuntu-latest
+    outputs:
+      server: ${{ steps.filter.outputs.server }}
+      client: ${{ steps.filter.outputs.client }}
     steps:
       # Check out merge commit with the base branch in case this workflow is invoked via pull request
       - name: Checkout the merged commit from PR and base branch
@@ -23,14 +26,20 @@ jobs:
             client:
               - 'app/client/**'
 
-      - name: server-formatting
-        if: ${{ steps.filter.outputs.server == 'true' }}
-        uses: ./.github/workflows/server-spotless.yml
-        with:
-          pr: ${{ github.event.pull_request.number }}
+  server-formatting:
+    name: server-formatting
+    needs: path-filter
+    if: needs.path-filter.outputs.server == 'true'
+    uses: ./.github/workflows/server-spotless.yml
+    secrets: inherit
+    with:
+      pr: ${{ github.event.pull_request.number }}
 
-      - name: client-formatting
-        if: ${{ steps.filter.outputs.client == 'true' }}
-        uses: ./.github/workflows/client-prettier.yml
-        with:
-          pr: ${{ github.event.pull_request.number }}
+  client-formatting:
+    name: client-formatting
+    needs: path-filter
+    if: needs.path-filter.outputs.client == 'true'
+    uses: ./.github/workflows/client-prettier.yml
+    secrets: inherit
+    with:
+      pr: ${{ github.event.pull_request.number }}
