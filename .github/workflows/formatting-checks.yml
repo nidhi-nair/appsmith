@@ -55,7 +55,7 @@ jobs:
     steps:
       - name: Return status for formatting checks
         run: |
-          if [[ "${{ needs.server-formatting.result }}" == "failed" ||  "${{ needs.client-formatting.result }}" == "failed" ]]; then
+          if [[ "${{ needs.server-formatting.result }}" == "failure" ||  "${{ needs.client-formatting.result }}" == "failure" ]]; then
             echo "Formatting checks failed";
             exit 1;
           else
