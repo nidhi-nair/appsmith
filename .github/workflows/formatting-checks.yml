@@ -7,14 +7,14 @@ on:
 jobs:
   server-formatting:
     name: server-formatting
-    uses: ./.github/workflows/formatting/server-spotless.yml
+    uses: ./.github/workflows/server-spotless.yml
     secrets: inherit
     with:
       pr: ${{ github.event.pull_request.number }}
 
   client-formatting:
     name: client-formatting
-    uses: ./.github/workflows/formatting/client-prettier.yml
+    uses: ./.github/workflows/client-prettier.yml
     secrets: inherit
     with:
       pr: ${{ github.event.pull_request.number }}
