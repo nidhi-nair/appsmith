@@ -27,6 +27,7 @@ jobs:
               - 'app/client/**'
             cypress:
               - 'app/client/cypress/manual_TestSuite/**'
+      - run: echo ${{ steps.filter.outputs }}
 
   server-spotless:
     name: server-spotless
