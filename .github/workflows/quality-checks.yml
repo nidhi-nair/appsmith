@@ -26,7 +26,7 @@ jobs:
             client:
               - 'app/client/**'
             not-cypress:
-              - !'app/client/cypress/manual_TestSuite/**'
+              - '!app/client/cypress/manual_TestSuite/**'
       - run: echo ${{ steps.filter.outputs.client == 'true' && steps.filter.outputs.not-cypress == 'true' }}
 
   server-spotless:
